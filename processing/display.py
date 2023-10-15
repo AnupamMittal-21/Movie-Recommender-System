@@ -45,6 +45,7 @@ class Main():
             self.movies2 = pd.DataFrame.from_dict(loaded_dict_2)
 
             # Now, For new_df
+            pickle_file_path = r'Files/new_df_dict.pkl'
             with open(pickle_file_path, 'rb') as pickle_file:
                 loaded_dict = pickle.load(pickle_file)
 
@@ -74,6 +75,7 @@ class Main():
             df_dict = self.new_df.to_dict()
 
             # Save the dictionary to a Pickle file
+            pickle_file_path = r'Files/new_df_dict.pkl'
             with open(pickle_file_path, 'wb') as pickle_file:
                 pickle.dump(df_dict, pickle_file)
 

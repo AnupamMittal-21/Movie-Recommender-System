@@ -11,6 +11,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Object for porterStemmer
 ps = PorterStemmer()
 
+import streamlit as st
+
 
 def get_genres(obj):
     lista = ast.literal_eval(obj)
@@ -18,6 +20,7 @@ def get_genres(obj):
     for i in lista:
         l1.append(i['name'])
     return l1
+
 
 def get_cast(obj):
     a = ast.literal_eval(obj)
@@ -28,6 +31,7 @@ def get_cast(obj):
             l_.append(a[i]['name'])
     return l_
 
+
 def get_crew(obj):
     l1 = []
     for i in ast.literal_eval(obj):
@@ -35,6 +39,7 @@ def get_crew(obj):
             l1.append(i['name'])
             break
     return l1
+
 
 def read_csv_to_df():
     #  Reading both the csv files
@@ -53,6 +58,9 @@ def read_csv_to_df():
     movies = movies[
         ['movie_id', 'title', 'overview', 'genres', 'keywords', 'cast', 'crew', 'production_companies', 'release_date']]
     movies.dropna(inplace=True)
+
+    # df[df['column_name'] == some_condition]['target_column'] = new_value
+    # df.loc[df['column_name'] == some_condition, 'target_column'] = new_value
 
     #  Applying functions to convert from list to only items.
     movies['genres'] = movies['genres'].apply(get_genres)
@@ -91,6 +99,7 @@ def read_csv_to_df():
 
     return movies, new_df, movies2
 
+
 def stemming_stopwords(li):
     ans = []
 
@@ -117,6 +126,7 @@ def stemming_stopwords(li):
     str_.translate(str_.maketrans('', '', punc))
     return str_
 
+
 def fetch_posters(movie_id):
     response = requests.get(
         'https://api.themoviedb.org/3/movie/{}?api_key=6177b4297dff132d300422e0343471fb'.format(movie_id))
@@ -128,6 +138,7 @@ def fetch_posters(movie_id):
                "=922024224&s=612x612&w=0&h=LXl8Ul7bria6auAXKIjlvb6hRHkAodTqyqBeA6K7R54="
 
     return str_
+
 
 def recommend(new_df, movie, pickle_file_path):
     with open(pickle_file_path, 'rb') as pickle_file:
@@ -147,11 +158,13 @@ def recommend(new_df, movie, pickle_file_path):
 
     return rec_movie_list, rec_poster_list
 
+
 def vectorise(new_df, col_name):
     cv = CountVectorizer(max_features=5000, stop_words='english')
     vec_tags = cv.fit_transform(new_df[col_name]).toarray()
     sim_bt = cosine_similarity(vec_tags)
     return sim_bt
+
 
 def fetch_person_details(id_):
     data = requests.get(
@@ -171,6 +184,7 @@ def fetch_person_details(id_):
         biography = ""
 
     return url, biography
+
 
 def get_details(selected_movie_name):
     # Loading both the dataframes for fast reading
@@ -196,7 +210,7 @@ def get_details(selected_movie_name):
     release_date = a.iloc[:, 5].iloc[0]
     revenue = a.iloc[:, 6].iloc[0]
     runtime = a.iloc[:, 7].iloc[0]
-    available_lang = ast.literal_eval(a.iloc[:, 8].iloc[0])
+    available_lang = ast.literal_eval(a.iloc[0, 8])
     vote_rating = a.iloc[:, 10].iloc[0]
     vote_count = a.iloc[:, 11].iloc[0]
     movie_id = a.iloc[:, 0].iloc[0]
