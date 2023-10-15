@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 import ast
 import requests
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -10,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Object for porterStemmer
 ps = PorterStemmer()
-
+nltk.download('stopwords')
 import streamlit as st
 
 
